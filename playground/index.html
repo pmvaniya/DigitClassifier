@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Trial Page</title>
+    <style>
+        /* Style for canvas pixels */
+        .canvas-pixel {
+            width: 15px;
+            height: 15px;
+            border: none;
+            margin: 0;
+            padding: 0;
+            background-color: aqua;
+            display: inline-block;
+        }
+
+        /* Style to remove space between inline-block elements */
+        #canvas-container {
+            font-size: 0;
+            /* Remove default font size */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="canvas-container" style="width: 150px;"></div>
+    <br>
+    <button onclick="generateArray();">Generate Array</button>
+
+    <script>
+        const container = document.getElementById('canvas-container');
+
+        // Function to generate the grid
+        function generateGrid(rows, cols) {
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const pixel = document.createElement('div');
+                    pixel.className = 'canvas-pixel';
+                    container.appendChild(pixel);
+                }
+            }
+        }
+
+        generateGrid(10, 10); // Generate a 10x10 grid
+
+        let isMousePressed = false; // Flag to track mouse press state
+
+        // Function to color adjacent pixels
+        function colorAdjacentPixels(pixel) {
+            // Get the index of the hovered pixel
+            const pixelIndex = Array.from(container.children).indexOf(pixel);
+            const cols = 10; // Number of columns in the grid
+            const adjacentIndices = [
+                pixelIndex - cols - 1, pixelIndex - cols, pixelIndex - cols + 1,
+                pixelIndex - 1, /* pixelIndex */ pixelIndex + 1,
+                pixelIndex + cols - 1, pixelIndex + cols, pixelIndex + cols + 1
+            ];
+
+            // Color the adjacent pixels
+            adjacentIndices.forEach(index => {
+                const adjacentPixel = container.children[index];
+                if (adjacentPixel) { // Check if the adjacent pixel exists
+                    adjacentPixel.style.backgroundColor = 'black';
+                }
+            });
+        }
+
+        const pixels = document.querySelectorAll('.canvas-pixel');
+
+        pixels.forEach(pixel => {
+            pixel.addEventListener('mouseenter', () => {
+                if (isMousePressed) {
+                    pixel.style.backgroundColor = 'black'; // Color the current pixel
+                    colorAdjacentPixels(pixel); // Color adjacent pixels
+                }
+            });
+        });
+
+        document.addEventListener('mousedown', (event) => {
+            if (event.button === 0) { // Check if left mouse button is pressed
+                isMousePressed = true;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isMousePressed = false; // Reset mouse press state on mouse up event
+        });
+
+        // Function to generate and log the nested list
+        function generateArray() {
+            const gridArray = [];
+
+            pixels.forEach(pixel => {
+                const value = pixel.style.backgroundColor === 'black' ? 1 : 0;
+                gridArray.push(value);
+            });
+
+            const rows = 10; // Number of rows
+            const cols = 10; // Number of columns
+            const nestedArray = [];
+
+            for (let i = 0; i < rows; i++) {
+                nestedArray.push(gridArray.slice(i * cols, (i + 1) * cols));
+            }
+
+            console.log(nestedArray);
+        }
+
+    </script>
+</body>
+
+</html>
