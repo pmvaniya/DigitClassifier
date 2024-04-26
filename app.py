@@ -15,11 +15,7 @@ def hello_world():
 @app.route('/predict', methods=['POST'])
 def predictDigit():
     data = request.get_json()
-    record = []
-    for row in data["data"]:
-        for i in row:
-            record.append(i)
-    prediction = str(predict(network, record))    
+    prediction = str(predict(network, data["data"]))    
     result = {"message": prediction}
     return jsonify(result)
 
