@@ -24,9 +24,10 @@
 </head>
 
 <body>
-    <div id="canvas-container" style="width: 150px;"></div>
+    <div id="canvas-container" style="width: 420px;"></div>
     <br>
     <button onclick="generateArray();">Generate Array</button>
+    <button onclick="location.reload();">Clear</button>
 
     <script>
         const container = document.getElementById('canvas-container');
@@ -42,7 +43,7 @@
             }
         }
 
-        generateGrid(10, 10); // Generate a 10x10 grid
+        generateGrid(28, 28); // Generate a 28x28 grid
 
         let isMousePressed = false; // Flag to track mouse press state
 
@@ -50,7 +51,7 @@
         function colorAdjacentPixels(pixel) {
             // Get the index of the hovered pixel
             const pixelIndex = Array.from(container.children).indexOf(pixel);
-            const cols = 10; // Number of columns in the grid
+            const cols = 28; // Number of columns in the grid
             const adjacentIndices = [
                 pixelIndex - cols - 1, pixelIndex - cols, pixelIndex - cols + 1,
                 pixelIndex - 1, /* pixelIndex */ pixelIndex + 1,
@@ -96,8 +97,8 @@
                 gridArray.push(value);
             });
 
-            const rows = 10; // Number of rows
-            const cols = 10; // Number of columns
+            const rows = 28; // Number of rows
+            const cols = 28; // Number of columns
             const nestedArray = [];
 
             for (let i = 0; i < rows; i++) {

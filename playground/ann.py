@@ -1,5 +1,6 @@
 import math
 import random
+import pickle
 
 # Set a fixed seed for random to ensure reproducibility
 random.seed(0)
@@ -48,14 +49,7 @@ def split_data(data, split_ratio = 0.8):
     except Exception as exception:
         print(exception)
         return None, None
-    
-data = read_csv("../data/iris.csv")
-lookup = {"setosa": 0, "versicolor": 1, "virginica": 2}
-encode(data, lookup)
-shuffle(data)
-
-split_ratio = 0.8
-train_set, test_set = split_data(data, split_ratio)
+ 
 
 def initialize_network(n_inputs, hidden_layers, n_outputs):
     network = []
@@ -153,21 +147,36 @@ def check_accuracy(network, dataset):
         predictions.append(prediction)
     return accuracy_metric(actual, predictions)
 
-# Initialize network and train it
-n_inputs = len(train_set[0]) - 1
-n_outputs = len(set(row[-1] for row in train_set))
-learning_rate = 0.1
-n_epochs = 100
 
-# Specify hidden layer sizes as a list
-hidden_layers = [8, 8]  # Example: Two hidden layers with 8 and 4 neurons respectively
+if __name__ == "__main__": 
+    data = read_csv("iris.csv")
+    lookup = {"setosa": 0, "versicolor": 1, "virginica": 2}
+    encode(data, lookup)
+    shuffle(data)
 
-network = initialize_network(n_inputs, hidden_layers, n_outputs)
-train_network(network, train_set, learning_rate, n_epochs, n_outputs, verbose=False)
+    split_ratio = 0.8
+    train_set, test_set = split_data(data, split_ratio)
 
-print("Train Accuracy:", check_accuracy(network, train_set))
-print("Test Accuracy:", check_accuracy(network, test_set))
+    # Initialize network and train it
+    n_inputs = len(train_set[0]) - 1
+    n_outputs = len(set(row[-1] for row in train_set))
+    learning_rate = 0.1
+    n_epochs = 100
 
-unclassified = [[5.5, 2.3, 4.0, 1.3, 'versicolor'], [5.7, 2.8, 4.5, 1.3, 'versicolor'], [4.9, 2.4, 3.3, 1.0, 'versicolor']]  # Add more samples as needed
-for sample in unclassified:
-    print(sample, "=> Predicted Class:", predict(network, sample[:-1]))
+    # Specify hidden layer sizes as a list
+    hidden_layers = [8, 8]  # Example: Two hidden layers with 8 and 4 neurons respectively
+
+    network = initialize_network(n_inputs, hidden_layers, n_outputs)
+    train_network(network, train_set, learning_rate, n_epochs, n_outputs, verbose=False)
+
+    print("Train Accuracy:", check_accuracy(network, train_set))
+    print("Test Accuracy:", check_accuracy(network, test_set))
+
+    unclassified = [[5.5, 2.3, 4.0, 1.3, 'versicolor'], [5.7, 2.8, 4.5, 1.3, 'versicolor'], [4.9, 2.4, 3.3, 1.0, 'versicolor']]
+    for sample in unclassified:
+        print(sample, "=> Predicted Class:", predict(network, sample[:-1]))
+
+    # Save the trained network to a file
+    filename = 'ann_model.pkl'
+    with open(filename, 'wb') as file:
+        pickle.dump(network, file)
