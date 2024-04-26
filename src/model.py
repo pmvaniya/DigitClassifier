@@ -31,6 +31,9 @@ def activate(weights, inputs):
 def sigmoid(activation):
     return 1.0 / (1.0 + math.exp(-activation))
 
+def relu(activation):
+    return max(0, activation)
+
 def forward_propagate(network, row):
     inputs = row
     for layer in network:
@@ -78,7 +81,7 @@ def train_network(network, train, learning_rate, n_epoch, n_outputs, verbose=Fal
             sum_error += sum([(expected[i] - outputs[i]) ** 2 for i in range(len(expected))])
             backward_propagate_error(network, expected)
             update_weights(network, row, learning_rate)
-        print(f'> epoch = {epoch+1}, learning_rate = {learning_rate}, error = {sum_error}')
+        print("> epoch = %2d, learning_rate = %3.2f, error = %6.2f"%((epoch + 1), learning_rate, sum_error))
         if learning_rate > 0.05:
             learning_rate -= 0.05
 

@@ -36,7 +36,7 @@ def getDataSet(folderPath):
 
     random.shuffle(dataset)
     
-    return dataset[:6000], dataset[6000:7000]
+    return dataset[:32000], dataset[32000:]
 
 if __name__ == "__main__":
 
@@ -52,3 +52,5 @@ if __name__ == "__main__":
             print()
         print("%3.2f"%testingData[0][i], end=" ")
     print()
+
+    print(testingData[0])
