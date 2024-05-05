@@ -33,6 +33,6 @@ if __name__ == "__main__":
     print("Test  Accuracy:", check_accuracy(network, test_set))
 
     # Save the trained network to a file
-    filename = 'ann_model.pkl'
+    filename = 'models/ann_model.pkl'
     with open(filename, 'wb') as file:
         pickle.dump(network, file)
