@@ -41,11 +41,11 @@
         <div class="row mb-3">
             <div class="col"></div>
             <div class="col-auto">
-                <label class="custum-file-upload text-center p-2" for="file" style="width: 424px;">
+                <label class="custum-file-upload text-center p-2" for="fileInput" style="width: 424px;">
                     <div class="text">
-                        <span><b>OR</b> Upload an Image Here <i class="bi bi-image"></i></span>
+                        <span id="imageSpan"><b>OR</b> Upload an Image Here <i class="bi bi-image"></i></span>
                     </div>
-                    <input type="file" id="file">
+                    <input type="file" id="fileInput">
                 </label>
             </div>
             <div class="col"></div>
@@ -97,7 +97,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" id="predict-modal">
                 <div class="modal-body">
-                    <div class="text-center" id="predict-ans">-</div>
+                    <div class="text-center" id="predict-ans">?</div>
                 </div>
             </div>
         </div>

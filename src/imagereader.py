@@ -48,14 +48,14 @@ def getDataSet(folderPath):
 
 if __name__ == "__main__":
 
-    dataset = getDataSet("../data/trainingSet")
+    dataset = getDataSet("../data")
 
     # with open("dataset.csv", 'a') as file:
     #     for record in dataset:
     #         file.write(",".join([str(i) for i in record]) + '\n')
     # print("Record appended successfully.")
 
-    trainingData, testingData = getDataSet("../data/trainingSet")
+    trainingData, testingData = getDataSet("../data")
     
     for i in range(len(trainingData[0])):
         if i % 28 == 0:

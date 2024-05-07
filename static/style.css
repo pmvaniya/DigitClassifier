@@ -7,6 +7,7 @@ body {
 
 canvas {
     background-color: white;
+    cursor: crosshair;
 }
 
 .dashed-gray-border {

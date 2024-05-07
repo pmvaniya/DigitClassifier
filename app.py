@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from src.model import predict
 from pickle import load
 from src.utils import condense
+from PIL import Image
 
 app = Flask(__name__)
 
@@ -13,15 +14,27 @@ with open(filename, 'rb') as file:
 def hello_world():
     return render_template("index.html")
 
-@app.route('/predict', methods=['POST'])
-def predictDigit():
+@app.route('/identifyCanvas', methods=['POST'])
+def identifyCanvas():
     canvas = request.get_json()["data"]
-    for i in range(len(canvas)):
-        canvas[i] /= 100
     canvas = condense(canvas, 28)
+    
     prediction = str(predict(network, canvas))
     show(canvas)
     print(prediction, "\n")
+    
+    result = {"message": prediction}
+    return jsonify(result)
+
+@app.route('/identifyImage', methods=['POST'])
+def identifyImage():
+    image = request.files['image']
+    image_arr = convertImage(image, 0.2)
+    
+    prediction = str(predict(network, image_arr))
+    show(image_arr)
+    print(prediction, "\n")
+    
     result = {"message": prediction}
     return jsonify(result)
 
@@ -34,6 +47,18 @@ def show(data):
     for row in data:
         print(" ".join(row))
     print("└" + ("─" * 57) + "┘")
+
+def convertImage(image, limit):
+    img = Image.open(image)
+    img_gray = img.convert('L')
+    pixel_values = list(img_gray.getdata())
+    
+    pixel_values = [i/255 for i in pixel_values]
+    for i in range(len(pixel_values)):
+        if pixel_values[i] <= limit:
+            pixel_values[i] = 0
+
+    return pixel_values
 
 if __name__ == '__main__':
     app.run()

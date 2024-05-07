@@ -1,6 +1,9 @@
 def condense(canvas, t):
     n = int(len(canvas) ** 0.5)
     r = int(n/t)
+    
+    for i in range(len(canvas)):
+        canvas[i] /= 100
 
     temp = []
     for i in range(n):

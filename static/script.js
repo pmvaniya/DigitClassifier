@@ -49,23 +49,52 @@ document.addEventListener("DOMContentLoaded", () => {
 			colorsArray.push(alpha);
 		}
 
-		console.log(colorsArray);
-
-		// Send the nested array to Flask using AJAX
-		const xhr = new XMLHttpRequest();
-		xhr.open("POST", "/predict", true);
-		xhr.setRequestHeader("Content-Type", "application/json");
-		xhr.onreadystatechange = function () {
-			if (xhr.readyState === 4 && xhr.status === 200) {
-				const response = JSON.parse(xhr.responseText);
-
-				document.getElementById("predict-ans").innerHTML = response["message"];
-				console.log(response["message"]);
-
-				ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-			}
-		};
-		xhr.send(JSON.stringify({ data: colorsArray }));
+		if (colorsArray.every(value => value === 0)) {
+			identifyImage();
+		} else {
+			identifyCanvas(colorsArray);
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+		}
 	});
+});
+
+function identifyImage() {
+	const fileInput = document.getElementById('fileInput');
+	const file = fileInput.files[0];
+	const formData = new FormData();
+	formData.append('image', file);
+
+	const xhr = new XMLHttpRequest();
+	xhr.open('POST', '/identifyImage', true);
+	xhr.onload = function () {
+		if (xhr.status === 200) {
+			const response = JSON.parse(xhr.responseText);
+			document.getElementById("predict-ans").innerHTML = response["message"];
+
+			document.getElementById('fileInput').value = '';
+			document.getElementById("imageSpan").innerHTML = '<b>OR</b> Upload an Image Here <i class="bi bi-image"></i>';
+			document.getElementById("imageSpan").style.color = "";
+		}
+	};
+	xhr.send(formData);
+}
+
+function identifyCanvas(colorsArray) {
+	const xhr = new XMLHttpRequest();
+
+	xhr.open("POST", "/identifyCanvas", true);
+	xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState === 4 && xhr.status === 200) {
+			const response = JSON.parse(xhr.responseText);
+			document.getElementById("predict-ans").innerHTML = response["message"];
+		}
+	};
+	xhr.send(JSON.stringify({ data: colorsArray }));
+}
+
+document.getElementById('fileInput').addEventListener('change', function () {
+	var uploadedFile = this.files[0];
+	document.getElementById("imageSpan").innerHTML = "File uploaded: " + uploadedFile.name;
+	document.getElementById("imageSpan").style.color = "green";
 });
